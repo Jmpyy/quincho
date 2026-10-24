@@ -11,6 +11,7 @@ Reloj, clima y tus apps. Nada más.
 ![APK](https://img.shields.io/badge/APK-67%20KB-e23b32)
 ![RAM](https://img.shields.io/badge/RAM-~35%20MB-5fb0ae)
 ![Dependencias](https://img.shields.io/badge/dependencias-0-efe8dc)
+![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue)
 
 <img src="docs/capturas/demo.gif" alt="Navegando por Quincho: el fondo cambia de color con cada app" width="100%">
 
@@ -181,3 +182,9 @@ TV](docs/diagnostico-botones-del-control.md), que no andaban por un paquete del 
 - Clima de [Open-Meteo](https://open-meteo.com/).
 - Identidad visual heredada de **Ombú**, mi entorno de escritorio en Quickshell.
 - Hecho en CachyOS con `adb` por WiFi y [Claude Code](https://claude.com/claude-code).
+
+## Licencia
+
+El código está bajo licencia [MIT](LICENSE): usalo, modificalo y compartilo libremente. La tipografía
+Bebas Neue mantiene su propia licencia [OFL](LICENCIAS/BebasNeue-OFL.txt). Los banners de las apps no
+están en este repo: Quincho los lee de cada app instalada.
