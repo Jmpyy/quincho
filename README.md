@@ -1,181 +1,183 @@
+<div align="center">
+
 # Quincho
 
-Launcher minimalista para Android TV, hecho a medida para una TV Noblex de 32" con apenas 1 GB de RAM.
-Una sola pantalla, sin menús que tapen todo, sin recomendaciones ni publicidad: reloj, clima y una fila
-de tarjetas con las apps que se usan de verdad.
+**Un launcher para Android TV que pesa 67 KB y no te muestra publicidad.**
 
-> *Quincho*: el lugar techado donde se junta la familia. Un rincón chico y sin vueltas para sentarse
-> a ver algo.
+Reloj, clima y tus apps. Nada más.
 
-Comparte la identidad visual de **Ombú** (el entorno de escritorio hecho en Quickshell): fondo oscuro,
-bordes entintados, sombras duras y acento rojo, pero en una versión sobria, pensada para usarse desde el
-sillón.
+![Android TV 8+](https://img.shields.io/badge/Android%20TV-8%2B-3DDC84?logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.0-7F52FF?logo=kotlin&logoColor=white)
+![APK](https://img.shields.io/badge/APK-67%20KB-e23b32)
+![RAM](https://img.shields.io/badge/RAM-~35%20MB-5fb0ae)
+![Dependencias](https://img.shields.io/badge/dependencias-0-efe8dc)
 
-![Inicio](docs/capturas/01-inicio-netflix.png)
+<img src="docs/capturas/demo.gif" alt="Navegando por Quincho: el fondo cambia de color con cada app" width="100%">
 
-## Qué hace
+</div>
 
-- **Inicio de una sola fila.** Tarjetas apaisadas con el **banner real de cada app** (Android lo trae
-  en el propio paquete; no hay logos copiados en el proyecto).
-- **Foco claro desde lejos.** La tarjeta enfocada crece, se levanta y proyecta una sombra roja con borde
-  crema. Abajo a la izquierda aparece su nombre.
-- **Fondo que cambia de color.** El resplandor del fondo se tiñe con el color dominante del banner
-  enfocado, con una transición suave de 600 ms.
-- **Reloj, fecha y clima de Lomas de Zamora** (Open-Meteo, sin clave ni cuenta).
-- **Apps editables sin recompilar.** Mantené OK sobre el engranaje de Ajustes y elegí qué apps van en
-  el inicio.
-- **Protector de pantalla propio.** A los 3 minutos de inactividad, el reloj y la fecha derivan muy
-  despacio sobre fondo casi negro, para no marcar el panel.
-- **Aviso de conexión.** Si se cae internet aparece un "● Sin internet" discreto, y el clima se
-  actualiza solo cuando vuelve.
-- **Pensado para no romperse.** El botón Atrás no hace nada, Home siempre vuelve al primer ícono y
-  el orden de la fila es fijo.
+<details>
+<summary><b>English</b></summary>
 
-| Disney+ | Max |
-| :---: | :---: |
-| ![Disney+](docs/capturas/02-disney.png) | ![Max](docs/capturas/03-max.png) |
+Quincho is a minimalist Android TV home screen built for a low-end TV (1 GB RAM, 720p). One row of
+apps using each app's real banner, a big clock, the weather, and a background that takes the color of
+the focused app. No ads, no recommendation rows, no dependencies: a ~67 KB APK that uses ~35 MB of RAM.
+Built with plain Android Views in Kotlin. The UI is in Spanish.
 
-| Crunchyroll | Elegir apps |
-| :---: | :---: |
-| ![Crunchyroll](docs/capturas/04-crunchyroll.png) | ![Editar apps](docs/capturas/05-editar-apps.png) |
+</details>
 
-| Protector de pantalla |
-| :---: |
-| ![Protector](docs/capturas/06-protector.png) |
+---
 
-## Números
+## Por qué
 
-Medidos en la TV real (Noblex, MediaTek, Android 11, 32 bits, 1 GB de RAM, 720p):
+El inicio de fábrica de Android TV es una vidriera: filas de recomendaciones, publicidad y apps
+"sugeridas" que nadie pidió, en una tele de 1 GB de RAM que se arrastra para mostrarlas.
+
+Quincho hace lo contrario. Una pantalla, las apps que usás, y que se entienda desde el sillón sin
+anteojos. Lo usa una familia todos los días: si mamá no lo entiende a la primera, está mal diseñado.
+
+> *Quincho*: el lugar techado donde se junta la familia.
+
+## Qué tiene
 
 | | |
 | --- | --- |
-| APK `release` | **~37 KB** |
-| RAM en uso (PSS) | **~27 MB** |
-| Dependencias | **ninguna** (solo el SDK de Android y Kotlin) |
-| Compose / AndroidX | no |
+| **Banners reales** | Cada tarjeta usa el banner oficial que la app trae adentro. No hay logos copiados en el repo. |
+| **Foco que se ve de lejos** | La tarjeta enfocada crece con un pequeño rebote, se ilumina y proyecta una sombra roja. Las demás se apagan. |
+| **Fondo vivo** | El fondo toma el color dominante del banner enfocado, con una trama de semitonos en la esquina. |
+| **Reloj, fecha y clima** | Saludo según la hora y el estado del cielo de [Open-Meteo](https://open-meteo.com/) (sin cuenta ni clave). |
+| **Protector de pantalla** | A los 3 minutos sin tocar nada, el reloj deriva despacio sobre negro para no marcar el panel. |
+| **Apps a elección** | Mantené OK sobre Ajustes y elegí qué apps aparecen. Sin recompilar. |
+| **Aviso de conexión** | Si se cae internet aparece un "● Sin internet" discreto. |
+| **A prueba de toques** | Atrás no hace nada, Home vuelve al principio y el orden de la fila es fijo. |
 
-## Decisiones de diseño
+<table>
+  <tr>
+    <td><img src="docs/capturas/01-inicio-netflix.png" alt="Inicio con Netflix enfocado"></td>
+    <td><img src="docs/capturas/02-disney.png" alt="Disney+ enfocado"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/capturas/03-max.png" alt="Max enfocado"></td>
+    <td><img src="docs/capturas/04-crunchyroll.png" alt="Crunchyroll enfocado"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/capturas/05-editar-apps.png" alt="Diálogo para elegir apps"></td>
+    <td><img src="docs/capturas/06-protector.png" alt="Protector de pantalla"></td>
+  </tr>
+</table>
 
-- **Views clásicas, no Jetpack Compose.** Con 1 GB de RAM el costo de Compose pesa más que el beneficio
-  para una pantalla tan simple. Todo se dibuja con `View`, `Canvas` y `ViewPropertyAnimator`.
-- **Cero dependencias.** Nada de AndroidX, Palette, Glide ni Retrofit. El color dominante se calcula con
-  un promedio ponderado por saturación sobre una miniatura de 16×9; el clima es un `HttpURLConnection`
-  más `org.json`.
-- **Resolución independiente.** Todas las medidas están en una unidad `u` = ancho de pantalla / 1280, así
-  el diseño se ve igual en 720p, 1080p o 4K.
-- **Scroll controlado.** `FilaScroll` anula el desplazamiento automático por foco de Android y centra la
-  tarjeta enfocada a mano, para que la fila no "salte".
-- **La tarjeta se dibuja a sí misma.** `Tile` pinta la sombra dura, el recorte redondeado, el banner y el
-  borde en `onDraw`; no hay XML de layouts.
+## Instalación
 
-El diseño salió de un mockup interactivo en HTML que está en [`docs/diseno/mockup.html`](docs/diseno/mockup.html)
-(abrilo en el navegador y movete con las flechas; las teclas 1/2/3 cambian de variante).
+Necesitás `adb` y la **depuración por red** activada en la TV (Ajustes → Preferencias del dispositivo →
+Acerca de → tocar 7 veces "Compilación" → Opciones de desarrollador).
 
-## Estructura
+**1. Bajá el APK** de la [última versión](../../releases/latest).
 
-> El identificador interno de la app sigue siendo `com.ombu.tv` (de cuando se llamaba Ombú TV). Cambiarlo
-> haría que Android la trate como otra app y obligaría a reinstalarla y volver a fijarla como inicio.
-
-```
-quincho/
-├── app/src/main/
-│   ├── AndroidManifest.xml         # categorías HOME y LEANBACK_LAUNCHER
-│   ├── kotlin/com/ombu/tv/
-│   │   ├── MainActivity.kt         # pantalla, fila de apps, clima, red, protector, diálogo de apps
-│   │   ├── Tile.kt                 # tarjeta de una app (foco, sombra, banner, borde)
-│   │   ├── FondoView.kt            # fondo con resplandor teñido y transición
-│   │   └── Reposo.kt               # protector de pantalla
-│   └── res/values/styles.xml
-├── docs/
-│   ├── capturas/                   # capturas reales desde la TV
-│   ├── diseno/mockup.html          # mockup interactivo del diseño
-│   └── diagnostico-botones-del-control.md
-├── scripts/instalar.sh             # compila e instala por adb
-└── README.md
-```
-
-## Requisitos
-
-- JDK 17
-- Android SDK con `platforms;android-34` y `build-tools;34.0.0` (sirven las *command-line tools*, no hace
-  falta Android Studio)
-- `adb` y una TV con Android TV 8 o superior con **depuración por red** activada
-
-En Arch Linux: `sudo pacman -S jdk17-openjdk gradle` y las *cmdline-tools* del SDK. El proyecto trae su
-propio `gradlew`, así que no depende de la versión de Gradle instalada.
+**2. Instalalo y dejalo como inicio:**
 
 ```sh
-export ANDROID_HOME=$HOME/Android/Sdk
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-```
-
-## Compilar
-
-```sh
-./gradlew assembleDebug     # app/build/outputs/apk/debug/app-debug.apk
-./gradlew assembleRelease   # app/build/outputs/apk/release/app-release.apk (minificado con R8)
-```
-
-El `release` se firma con la clave de debug del SDK porque es una app de uso personal por *sideload*. Si
-alguna vez se publica en una tienda hay que crear una clave propia.
-
-## Instalar en la TV
-
-Con el script, que compila, conecta, instala y abre la app:
-
-```sh
-scripts/instalar.sh 192.168.1.37           # solo instala
-scripts/instalar.sh 192.168.1.37 --home    # además lo deja como launcher por defecto
-```
-
-O a mano:
-
-```sh
-adb connect 192.168.1.37:5555
-adb install -r app/build/outputs/apk/release/app-release.apk
+adb connect IP-DE-TU-TV:5555
+adb install quincho.apk
 adb shell cmd package set-home-activity com.ombu.tv/.MainActivity
 ```
 
-Para volver al launcher anterior, apuntá `set-home-activity` a su componente. Si no queda ninguno, Android
-usa el `FallbackHome` del sistema.
+Listo. Apretá Home.
 
-> **Ojo:** una actualización del sistema de la TV puede pisar el launcher por defecto. Si pasa, repetí el
-> comando de `set-home-activity`.
+<details>
+<summary>Volver al launcher de antes</summary>
+
+```sh
+# Ver qué launchers hay instalados
+adb shell cmd package query-activities -a android.intent.action.MAIN -c android.intent.category.HOME
+
+# Dejar otro como inicio
+adb shell cmd package set-home-activity <paquete>/<actividad>
+
+# O desinstalar Quincho: Android vuelve al launcher del sistema
+adb uninstall com.ombu.tv
+```
+
+Una actualización del sistema de la TV puede pisar el inicio elegido. Si pasa, repetí `set-home-activity`.
+
+</details>
 
 ## Uso
 
-| Acción | Resultado |
+| Control | Qué hace |
 | --- | --- |
-| ← → | Mover el foco por la fila |
-| OK sobre una app | Abrirla |
-| Mantener OK sobre Ajustes | Elegir qué apps aparecen en el inicio |
-| Home | Volver al primer ícono |
-| Atrás | No hace nada (es el inicio) |
-| 3 min sin tocar nada | Entra el protector; cualquier tecla lo cierra |
+| ← → | Moverse entre apps |
+| OK | Abrir la app |
+| Mantener OK sobre ⚙ | Elegir qué apps aparecen |
+| Home | Volver a la primera app |
+| Atrás | Nada (estás en el inicio) |
 
-Las apps de fábrica, en orden fijo: Netflix, YouTube, Prime Video, Disney+, Max, Crunchyroll y Steam Link.
-Las que se agreguen desde el diálogo van después, ordenadas por nombre. El botón **Restaurar** del diálogo
-vuelve a la lista de fábrica.
+## Personalizar
 
-Para cambiar la lista de fábrica o el nombre y color de respaldo de una app, se edita la lista `entradas`
-al principio de [`MainActivity.kt`](app/src/main/kotlin/com/ombu/tv/MainActivity.kt).
+Quincho se hizo para una casa en particular, pero cambiarlo es tocar dos lugares de
+[`MainActivity.kt`](app/src/main/kotlin/com/ombu/tv/MainActivity.kt):
 
-## Limitaciones conocidas
+- **Apps de fábrica y su orden:** la lista `entradas` (paquete, nombre y color de respaldo).
+- **Ciudad del clima:** la latitud y longitud en `pedirClima()`. Viene configurado para Lomas de
+  Zamora, Buenos Aires.
 
-- **No muestra "Continuar viendo" ni recomendaciones de las apps.** Leer ese contenido exige el permiso
-  `ACCESS_ALL_EPG_DATA`, que es `signature|privileged`: solo lo pueden tener apps de sistema.
-- **El clima está fijo en Lomas de Zamora** (coordenadas en `pedirClima()`).
-- **El aviso "Sin internet" no se probó** cortando la red de la TV real; el resto de las funciones sí
-  se probó en el dispositivo.
-- **Una app instalada después no aparece sola.** Hay que agregarla desde el diálogo de apps.
+## Compilar
 
-## Problemas conocidos del hardware
+Requiere JDK 17 y el Android SDK (`platforms;android-34`, `build-tools;34.0.0`). Alcanza con las
+*command-line tools*, no hace falta Android Studio.
 
-Antes de escribir el launcher hubo que arreglar los botones dedicados del control, que no respondían
-por un paquete del fabricante desinstalado. La historia completa está en
-[`docs/diagnostico-botones-del-control.md`](docs/diagnostico-botones-del-control.md).
+```sh
+export ANDROID_HOME=$HOME/Android/Sdk
+./gradlew assembleRelease
+# app/build/outputs/apk/release/app-release.apk
 
-## Hecho con
+# o compilar e instalar en la TV de una:
+scripts/instalar.sh IP-DE-TU-TV --home
+```
 
-Kotlin 2.0, Android Gradle Plugin 8.7, Gradle 8.9. Desarrollado y probado sobre CachyOS (Arch Linux) con
-`adb` por red, con ayuda de Claude Code.
+## Cómo está hecho
+
+Pensado para una **Noblex de 32" con chip MediaTek, Android 11, 32 bits, 1 GB de RAM y 720p**: si anda
+bien ahí, anda bien en cualquier lado.
+
+- **Views clásicas, sin Jetpack Compose.** Para una pantalla así, Compose cuesta más RAM de lo que
+  aporta. Todo se dibuja con `Canvas` y `ViewPropertyAnimator`.
+- **Cero dependencias.** Ni AndroidX, ni Palette, ni Glide, ni Retrofit. Eso deja un APK de 67 KB
+  (la mayor parte es la tipografía).
+- **Color dominante casero.** Promedio ponderado por saturación sobre una miniatura de 16×9 del banner.
+- **Trama de semitonos sin costo.** Se dibuja una sola vez en un bitmap `ALPHA_8` (1 byte por píxel) y
+  en cada cuadro solo se pinta con el color del momento.
+- **Resolución independiente.** Todas las medidas usan `u = ancho / 1280`: se ve igual en 720p, 1080p
+  o 4K.
+
+```
+app/src/main/kotlin/com/ombu/tv/
+├── MainActivity.kt   # pantalla, fila, clima, red, protector y diálogo de apps
+├── Tile.kt           # una tarjeta: foco, velo, sombra dura, banner y borde
+├── FondoView.kt      # fondo teñido y trama de semitonos
+└── Reposo.kt         # protector de pantalla
+```
+
+El diseño salió de un [mockup interactivo](docs/diseno/mockup.html) en HTML (abrilo y movete con las
+flechas). Y antes de escribir una línea hubo que [arreglar los botones del control de la
+TV](docs/diagnostico-botones-del-control.md), que no andaban por un paquete del fabricante desinstalado.
+
+## Limitaciones
+
+- **No muestra "Continuar viendo" ni recomendaciones.** Leer ese contenido de otras apps requiere el
+  permiso `ACCESS_ALL_EPG_DATA`, reservado a apps del sistema. Sin root, no hay forma.
+- **La ciudad del clima y la lista de fábrica se cambian en el código** (ver [Personalizar](#personalizar)).
+- **La interfaz está en español.**
+
+## Ideas para más adelante
+
+- [ ] Elegir la ciudad del clima desde el diálogo de ajustes
+- [ ] Varios temas de color
+- [ ] Traducción al inglés
+
+## Créditos
+
+- Tipografía [Bebas Neue](https://github.com/dharmatype/Bebas-Neue) de Dharma Type, bajo
+  [SIL Open Font License 1.1](LICENCIAS/BebasNeue-OFL.txt).
+- Clima de [Open-Meteo](https://open-meteo.com/).
+- Identidad visual heredada de **Ombú**, mi entorno de escritorio en Quickshell.
+- Hecho en CachyOS con `adb` por WiFi y [Claude Code](https://claude.com/claude-code).

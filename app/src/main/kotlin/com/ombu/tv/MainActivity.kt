@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.view.KeyEvent
+import android.view.animation.DecelerateInterpolator
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -61,6 +62,7 @@ class MainActivity : Activity() {
     private lateinit var raiz: FrameLayout
     private lateinit var fondo: FondoView
     private lateinit var hora: TextView
+    private lateinit var saludo: TextView
     private lateinit var fecha: TextView
     private lateinit var clima: TextView
     private lateinit var avisoRed: TextView
@@ -93,6 +95,7 @@ class MainActivity : Activity() {
     private val tictac = object : Runnable {
         override fun run() {
             val ahora = Date()
+            saludo.text = saludoPara(ahora)
             hora.text = formatoHora.format(ahora)
             fecha.text = formatoFecha.format(ahora).replaceFirstChar { it.uppercase() }
             handler.postDelayed(this, 15_000)
@@ -113,18 +116,34 @@ class MainActivity : Activity() {
         fondo = FondoView(this)
         raiz.addView(fondo, FrameLayout.LayoutParams(-1, -1))
 
-        hora = texto(88f, crema, bold = true)
-        fecha = texto(22f, crema).apply { alpha = 0.75f }
-        clima = texto(22f, cian).apply { setPadding(0, (4 * u).toInt(), 0, 0) }
+        saludo = texto(17f, Color.parseColor("#e23b32"), bold = true).apply {
+            letterSpacing = 0.22f
+            setPadding((4 * u).toInt(), 0, 0, (2 * u).toInt())
+        }
+        hora = texto(132f, crema).apply {
+            typeface = resources.getFont(R.font.bebas_neue)
+            letterSpacing = 0.02f
+            // sombra dura entintada, como las tarjetas
+            setShadowLayer(0.01f, 4 * u, 4 * u, Color.BLACK)
+        }
+        // Bebas deja aire debajo de los números: la fecha sube para pegarse al reloj.
+        fecha = texto(22f, crema).apply {
+            alpha = 0.8f
+            // MATCH_PARENT como el resto de la columna: si un solo hijo es WRAP_CONTENT, LinearLayout
+            // toma su ancho para toda la columna y recorta al reloj y al clima.
+            layoutParams = LinearLayout.LayoutParams(-1, -2).apply { topMargin = (-18 * u).toInt() }
+        }
+        clima = texto(22f, cian).apply { setPadding(0, (6 * u).toInt(), 0, 0) }
         val columna = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            addView(saludo)
             addView(hora)
             addView(fecha)
             addView(clima)
         }
         raiz.addView(columna, FrameLayout.LayoutParams(-2, -2).apply {
             leftMargin = (64 * u).toInt()
-            topMargin = (44 * u).toInt()
+            topMargin = (48 * u).toInt()
         })
 
         scroll = FilaScroll(this).apply {
@@ -155,10 +174,13 @@ class MainActivity : Activity() {
             topMargin = (52 * u).toInt()
         })
 
-        nombre = texto(20f, crema)
-        raiz.addView(nombre, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.START).apply {
-            leftMargin = (64 * u).toInt()
-            bottomMargin = (36 * u).toInt()
+        // El nombre viaja debajo de la tarjeta enfocada; su ancho es fijo y el texto va centrado.
+        nombre = texto(21f, crema, bold = true).apply {
+            gravity = Gravity.CENTER_HORIZONTAL
+            letterSpacing = 0.04f
+        }
+        raiz.addView(nombre, FrameLayout.LayoutParams(anchoNombre(), -2, Gravity.BOTTOM or Gravity.START).apply {
+            bottomMargin = (34 * u).toInt()
         })
 
         setContentView(raiz)
@@ -253,7 +275,7 @@ class MainActivity : Activity() {
             agregar(tile, (200 * u).toInt(), alto, separacion)
         }
 
-        val ajustes = Tile(this, u, "Ajustes  ·  mantené OK para elegir las apps", null, Color.parseColor("#2a2224"), false,
+        val ajustes = Tile(this, u, "Ajustes  ·  mantené OK para elegir apps", null, Color.parseColor("#2a2224"), false,
             Intent(Settings.ACTION_SETTINGS), esAjustes = true).apply {
             tinte = Color.parseColor("#4a3a3d")
             alMantener = { editarApps() }
@@ -330,7 +352,40 @@ class MainActivity : Activity() {
     private fun centrar(tile: Tile) {
         val centro = tile.left + tile.width / 2
         val maximo = (fila.width - scroll.width).coerceAtLeast(0)
-        scroll.smoothScrollTo((centro - scroll.width / 2).coerceIn(0, maximo), 0)
+        val destino = (centro - scroll.width / 2).coerceIn(0, maximo)
+        scroll.smoothScrollTo(destino, 0)
+
+        // Llevar el nombre debajo de donde va a quedar la tarjeta, sin que se salga de la pantalla.
+        val xEnPantalla = scroll.left + centro - destino
+        val mitadTexto = nombre.paint.measureText(nombre.text.toString()) / 2
+        val margen = 32 * u
+        val x = xEnPantalla.toFloat().coerceIn(margen + mitadTexto, raiz.width - margen - mitadTexto)
+        nombre.animate().translationX(x - anchoNombre() / 2f)
+            .setDuration(240).setInterpolator(DecelerateInterpolator()).start()
+    }
+
+    private fun anchoNombre() = (560 * u).toInt()
+
+    private fun saludoPara(d: Date): String {
+        val h = java.util.Calendar.getInstance().apply { time = d }.get(java.util.Calendar.HOUR_OF_DAY)
+        return when (h) {
+            in 6..11 -> "BUEN DÍA"
+            in 12..19 -> "BUENAS TARDES"
+            else -> "BUENAS NOCHES"
+        }
+    }
+
+    /** Códigos WMO de Open-Meteo, resumidos a lo que importa al mirar por la ventana. */
+    private fun describirClima(codigo: Int): String = when (codigo) {
+        0 -> "Despejado"
+        1, 2 -> "Algo nublado"
+        3 -> "Nublado"
+        45, 48 -> "Niebla"
+        in 51..57 -> "Llovizna"
+        in 61..67, in 80..82 -> "Lluvia"
+        in 71..77, 85, 86 -> "Nieve"
+        in 95..99 -> "Tormenta"
+        else -> ""
     }
 
     private fun lanzar(tile: Tile) {
@@ -373,14 +428,16 @@ class MainActivity : Activity() {
 
     private fun pedirClima() {
         try {
-            val url = URL("https://api.open-meteo.com/v1/forecast?latitude=-34.76&longitude=-58.40&current=temperature_2m")
+            val url = URL("https://api.open-meteo.com/v1/forecast?latitude=-34.76&longitude=-58.40&current=temperature_2m,weather_code")
             val con = url.openConnection() as HttpURLConnection
             con.connectTimeout = 8000
             con.readTimeout = 8000
             val json = con.inputStream.bufferedReader().use { it.readText() }
             con.disconnect()
-            val t = JSONObject(json).getJSONObject("current").getDouble("temperature_2m")
-            temperatura = "${t.roundToInt()}°"
+            val actual = JSONObject(json).getJSONObject("current")
+            val t = actual.getDouble("temperature_2m")
+            val cielo = describirClima(actual.optInt("weather_code", -1))
+            temperatura = if (cielo.isEmpty()) "${t.roundToInt()}°" else "${t.roundToInt()}°  $cielo"
         } catch (_: Exception) {
             // Sin red: se deja el último valor conocido
         }

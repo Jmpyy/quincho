@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -28,8 +27,9 @@ class Reposo(context: Context, private val u: Float) : View(context) {
     private val pHora = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#efe8dc")
         alpha = 190
-        textSize = 150 * u
-        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        textSize = 210 * u
+        typeface = context.resources.getFont(R.font.bebas_neue)
+        letterSpacing = 0.02f
         textAlign = Paint.Align.CENTER
     }
     private val pFecha = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -66,6 +66,6 @@ class Reposo(context: Context, private val u: Float) : View(context) {
         val ahora = Date()
         canvas.drawText(formatoHora.format(ahora), cx, cy, pHora)
         val fecha = formatoFecha.format(ahora).replaceFirstChar { it.uppercase() }
-        canvas.drawText(fecha, cx, cy + 46 * u, pFecha)
+        canvas.drawText(fecha, cx, cy + 52 * u, pFecha)
     }
 }

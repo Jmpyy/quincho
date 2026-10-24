@@ -9,6 +9,11 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.OvershootInterpolator
+import android.animation.ValueAnimator
+
+private const val VELO_REPOSO = 0.38f
 
 /**
  * Tarjeta apaisada de una app. Dibuja ella misma el borde entintado, la sombra dura
@@ -52,20 +57,29 @@ class Tile(
             setOnLongClickListener(if (valor != null) OnLongClickListener { valor(this); true } else null)
         }
 
+    /** Velo oscuro sobre las tarjetas sin foco (0 = sin velo). Apaga los banners blancos que encandilan. */
+    private var velo = VELO_REPOSO
+    private var animadorVelo: ValueAnimator? = null
+
     override fun onFocusChanged(gainFocus: Boolean, direction: Int, previouslyFocusedRect: android.graphics.Rect?) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
         animate().cancel()
         if (gainFocus) {
             animate().scaleX(1.1f).scaleY(1.1f).translationX(-3 * u).translationY(-3 * u)
-                .setDuration(180).start()
+                .setDuration(220).setInterpolator(OvershootInterpolator(1.6f)).start()
             translationZ = 10f
             alEnfocar?.invoke(this)
         } else {
             animate().scaleX(1f).scaleY(1f).translationX(0f).translationY(0f)
-                .setDuration(180).start()
+                .setDuration(180).setInterpolator(DecelerateInterpolator()).start()
             translationZ = 0f
         }
-        invalidate()
+        animadorVelo?.cancel()
+        animadorVelo = ValueAnimator.ofFloat(velo, if (gainFocus) 0f else VELO_REPOSO).apply {
+            duration = 200
+            addUpdateListener { velo = it.animatedValue as Float; invalidate() }
+            start()
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -94,6 +108,7 @@ class Tile(
             canvas.drawColor(colorMarca)
             if (esAjustes) dibujarTuerca(canvas, w / 2, h / 2) else dibujarIcono(canvas, w, h)
         }
+        if (velo > 0f) canvas.drawColor(Color.argb((velo * 255).toInt(), 0x16, 0x10, 0x11))
         canvas.restore()
 
         // borde entintado
