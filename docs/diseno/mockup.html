@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup launcher TV</title>
+<style>
+  :root {
+    --bg: #161011; --red: #e23b32; --cyan: #5fb0ae; --cream: #efe8dc;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #0b0809; color: var(--cream); min-height: 100vh;
+    font-family: "Inter", system-ui, sans-serif;
+    display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px;
+  }
+  .barra { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; font-size: 14px; }
+  .barra button {
+    background: #231a1c; color: var(--cream); border: 1px solid #3a2c2f; border-radius: 8px;
+    padding: 8px 14px; font: inherit; cursor: pointer;
+  }
+  .barra button.on { background: var(--cream); color: var(--bg); border-color: var(--cream); }
+  .ayuda { opacity: .55; font-size: 13px; }
+
+  .marco { width: 100%; max-width: 1280px; aspect-ratio: 16/9; position: relative; overflow: hidden; border-radius: 10px; }
+  @property --tinte { syntax: "<color>"; inherits: true; initial-value: #161011; }
+  .tv { width: 1280px; height: 720px; position: absolute; top: 0; left: 0; transform-origin: top left; overflow: hidden; background: var(--bg); transition: --tinte .6s ease; }
+
+  /* fondo teñido según la app enfocada */
+  .glow { position: absolute; inset: -20%; transition: background .6s ease; filter: blur(30px); }
+  .viñeta { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 120%, rgba(0,0,0,.65), transparent 60%); }
+
+  .hora { position: absolute; z-index: 3; transition: all .4s; }
+  .hora .h { font-weight: 300; letter-spacing: -1px; }
+  .hora .c { opacity: .7; margin-top: 4px; }
+
+  .fila { position: absolute; display: flex; z-index: 2; }
+  .app {
+    flex: none; width: 232px; height: 130px; border-radius: 16px; position: relative;
+    display: grid; place-items: center; font-weight: 700; letter-spacing: .3px;
+    transition: transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s, opacity .22s, filter .22s;
+    background: var(--c); color: #fff; overflow: hidden;
+  }
+  .app::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.18), transparent 45%); }
+  .app .n { position: relative; z-index: 1; font-size: 26px; text-shadow: 0 2px 8px rgba(0,0,0,.35); }
+  .app.ajustes { width: 130px; background: #2a2224; }
+  .nombre { position: absolute; z-index: 3; font-size: 22px; letter-spacing: .4px; transition: opacity .3s; }
+
+  /* --- A: Sobrio --- */
+  [data-v="A"] .glow { background: radial-gradient(circle at 50% 70%, var(--tinte, #333) 0%, transparent 55%); opacity: .35; }
+  [data-v="A"] .hora { top: 38px; right: 56px; text-align: right; }
+  [data-v="A"] .hora .h { font-size: 54px; }
+  [data-v="A"] .hora .c { font-size: 20px; }
+  [data-v="A"] .fila { left: 0; right: 0; top: 300px; justify-content: center; gap: 26px; }
+  [data-v="A"] .app { opacity: .55; filter: saturate(.7); }
+  [data-v="A"] .app.foco { opacity: 1; filter: none; transform: translateY(-14px) scale(1.14); box-shadow: 0 26px 44px -10px rgba(0,0,0,.7); }
+  [data-v="A"] .nombre { left: 0; right: 0; top: 470px; text-align: center; }
+
+  /* --- B: Ombú (calidez, tinta, acento rojo/cian) --- */
+  [data-v="B"] .glow {
+    background:
+      radial-gradient(circle at 70% 85%, color-mix(in srgb, var(--tinte) 60%, #161011), transparent 62%),
+      radial-gradient(circle at 10% 0%, rgba(226,59,50,.16), transparent 45%);
+  }
+  [data-v="B"] .hora { top: 56px; left: 64px; }
+  [data-v="B"] .hora .h { font-size: 88px; font-weight: 700; color: var(--cream); }
+  [data-v="B"] .hora .c { font-size: 22px; color: var(--cyan); }
+  [data-v="B"] .fila { left: 64px; bottom: 96px; gap: 22px; }
+  [data-v="B"] .app { width: 200px; height: 112px; border-radius: 12px; border: 2px solid #000; box-shadow: 4px 4px 0 #000; }
+  [data-v="B"] .app.ajustes { width: 112px; }
+  [data-v="B"] .app .n { font-size: 22px; }
+  [data-v="B"] .app.foco { transform: translate(-3px,-3px) scale(1.1); box-shadow: 8px 8px 0 var(--red); border-color: var(--cream); }
+  [data-v="B"] .nombre { left: 64px; bottom: 44px; color: var(--cream); font-size: 20px; }
+
+  /* --- C: Estilo Apple (centrada, fondo teñido) --- */
+  [data-v="C"] .glow { background: radial-gradient(circle at 50% 55%, var(--tinte, #444), transparent 62%); opacity: .6; }
+  [data-v="C"] .hora { top: 34px; left: 0; right: 0; text-align: center; }
+  [data-v="C"] .hora .h { font-size: 40px; }
+  [data-v="C"] .hora .c { font-size: 17px; }
+  [data-v="C"] .fila { left: 0; right: 0; top: 270px; justify-content: center; gap: 30px; }
+  [data-v="C"] .app { width: 250px; height: 140px; border-radius: 20px; }
+  [data-v="C"] .app.ajustes { width: 140px; }
+  [data-v="C"] .app.foco { transform: scale(1.18); box-shadow: 0 34px 60px -14px rgba(0,0,0,.75), 0 0 0 3px rgba(255,255,255,.9); z-index: 5; }
+  [data-v="C"] .app:not(.foco) { transform: scale(.94); opacity: .85; }
+  [data-v="C"] .nombre { left: 0; right: 0; top: 500px; text-align: center; font-size: 24px; }
+</style>
+</head>
+<body>
+  <div class="barra">
+    <span>Variante:</span>
+    <button data-v="A">1 · Sobrio</button>
+    <button data-v="B" class="on">2 · Ombú + fondo teñido</button>
+    <button data-v="C">3 · Apple</button>
+    <span class="ayuda">Flechas ← → para mover el foco · teclas 1 / 2 / 3 para cambiar de variante</span>
+  </div>
+
+  <div class="marco" id="marco">
+    <div class="tv" id="tv" data-v="B">
+      <div class="glow" id="glow"></div>
+      <div class="viñeta"></div>
+      <div class="hora"><div class="h" id="hh">--:--</div><div class="c" id="clima">Lomas de Zamora</div></div>
+      <div class="fila" id="fila"></div>
+      <div class="nombre" id="nombre"></div>
+    </div>
+  </div>
+
+<script>
+  const apps = [
+    { n: "Netflix",      c: "#c0111a" },
+    { n: "YouTube",      c: "#d9142b" },
+    { n: "Prime Video",  c: "#0b7fb0" },
+    { n: "Disney+",      c: "#1b3a9e" },
+    { n: "Max",          c: "#4b1fa0" },
+    { n: "Crunchyroll",  c: "#d9641a" },
+    { n: "Steam Link",   c: "#1d4a66" },
+    { n: "Ajustes",      c: "#2a2224", ajustes: true },
+  ];
+  const tv = document.getElementById("tv"), fila = document.getElementById("fila");
+  const glow = document.getElementById("glow"), nombre = document.getElementById("nombre");
+  let foco = 0;
+
+  apps.forEach((a, i) => {
+    const d = document.createElement("div");
+    d.className = "app" + (a.ajustes ? " ajustes" : "");
+    d.style.setProperty("--c", a.c);
+    d.innerHTML = `<span class="n">${a.ajustes ? "⚙" : a.n}</span>`;
+    d.onclick = () => { foco = i; pintar(); };
+    fila.appendChild(d);
+  });
+
+  function pintar() {
+    [...fila.children].forEach((el, i) => el.classList.toggle("foco", i === foco));
+    tv.style.setProperty("--tinte", apps[foco].c);
+    nombre.textContent = apps[foco].n;
+    // desplazar la fila para que el enfocado quede visible/centrado si no entra
+    const v = tv.dataset.v;
+    const el = fila.children[foco];
+    if (v === "B") {
+      const ancho = fila.scrollWidth, visible = 1280 - 128;
+      const centro = el.offsetLeft + el.offsetWidth / 2;
+      const desp = ancho > visible ? Math.max(0, Math.min(ancho - visible, centro - visible / 2)) : 0;
+      fila.style.transform = `translateX(${-desp}px)`;
+    } else {
+      const ancho = fila.scrollWidth;
+      const centro = el.offsetLeft + el.offsetWidth / 2;
+      const desp = ancho > 1280 ? Math.max(0, Math.min(ancho - 1280, centro - 640)) : 0;
+      fila.style.transform = `translateX(${-desp}px)`;
+    }
+  }
+
+  function setVariante(v) {
+    tv.dataset.v = v;
+    document.querySelectorAll(".barra button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+    fila.style.transform = "none";
+    requestAnimationFrame(pintar);
+  }
+  document.querySelectorAll(".barra button").forEach(b => b.onclick = () => setVariante(b.dataset.v));
+
+  addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") foco = Math.min(apps.length - 1, foco + 1);
+    else if (e.key === "ArrowLeft") foco = Math.max(0, foco - 1);
+    else if (e.key === "1") return setVariante("A");
+    else if (e.key === "2") return setVariante("B");
+    else if (e.key === "3") return setVariante("C");
+    else return;
+    e.preventDefault(); pintar();
+  });
+
+  // escalar el escenario 1280x720 al ancho disponible
+  const marco = document.getElementById("marco");
+  function escalar() { tv.style.transform = `scale(${marco.clientWidth / 1280})`; }
+  addEventListener("resize", escalar); escalar();
+
+  // reloj real + clima de Lomas de Zamora (Open-Meteo, sin clave)
+  const hh = document.getElementById("hh"), clima = document.getElementById("clima");
+  let temp = null;
+  function reloj() {
+    const d = new Date();
+    hh.textContent = d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hour12: false });
+    clima.textContent = temp === null ? "Lomas de Zamora" : `${temp}° · Lomas de Zamora`;
+  }
+  reloj(); setInterval(reloj, 15000);
+  fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.76&longitude=-58.40&current=temperature_2m")
+    .then(r => r.json()).then(j => { temp = Math.round(j.current.temperature_2m); reloj(); })
+    .catch(() => {});
+
+  pintar();
+</script>
+</body>
+</html>
