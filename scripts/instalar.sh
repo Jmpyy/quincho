@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Compila Ombú TV (release) y lo instala en la TV por adb.
+# Compila Quincho (release) y lo instala en la TV por adb.
 #
 # Uso:
 #   scripts/instalar.sh [IP-de-la-TV] [--home]

@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ombu-tv"
+rootProject.name = "quincho"
 include(":app")

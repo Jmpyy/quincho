@@ -1,1 +1,1 @@
-# Ombú TV no usa reflexión ni librerías externas: alcanzan las reglas por defecto de Android.
+# Quincho no usa reflexión ni librerías externas: alcanzan las reglas por defecto de Android.

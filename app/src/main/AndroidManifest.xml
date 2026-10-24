@@ -9,7 +9,7 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
-        android:label="Ombú TV"
+        android:label="Quincho"
         android:theme="@style/Tema"
         android:hardwareAccelerated="true">
 

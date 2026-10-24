@@ -1,10 +1,13 @@
-# Ombú TV
+# Quincho
 
 Launcher minimalista para Android TV, hecho a medida para una TV Noblex de 32" con apenas 1 GB de RAM.
 Una sola pantalla, sin menús que tapen todo, sin recomendaciones ni publicidad: reloj, clima y una fila
 de tarjetas con las apps que se usan de verdad.
 
-Pertenece a la familia visual de **Ombú** (el entorno de escritorio hecho en Quickshell): fondo oscuro,
+> *Quincho*: el lugar techado donde se junta la familia. Un rincón chico y sin vueltas para sentarse
+> a ver algo.
+
+Comparte la identidad visual de **Ombú** (el entorno de escritorio hecho en Quickshell): fondo oscuro,
 bordes entintados, sombras duras y acento rojo, pero en una versión sobria, pensada para usarse desde el
 sillón.
 
@@ -70,8 +73,11 @@ El diseño salió de un mockup interactivo en HTML que está en [`docs/diseno/mo
 
 ## Estructura
 
+> El identificador interno de la app sigue siendo `com.ombu.tv` (de cuando se llamaba Ombú TV). Cambiarlo
+> haría que Android la trate como otra app y obligaría a reinstalarla y volver a fijarla como inicio.
+
 ```
-ombu-tv/
+quincho/
 ├── app/src/main/
 │   ├── AndroidManifest.xml         # categorías HOME y LEANBACK_LAUNCHER
 │   ├── kotlin/com/ombu/tv/
